@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export interface ShowCardProps {
+  id: number;
   artist: string;
   stage: string;
   day: string;
@@ -9,64 +10,64 @@ export interface ShowCardProps {
   image: string;
 }
 
-export default function ShowCard(
-  /* TODO 1: Accept props with ShowCardProps type here */
-) {
+export default function ShowCard(props: ShowCardProps) {
   // TODO 2: Create state called isInterested of type boolean (default false)
-  // const [isInterested, setIsInterested] = ...
+  const [isInterested, setIsInterested] = useState<boolean>(false);
+ 
 
   // TODO 3: Function that toggles true/false in isInterested
-  // function handleToggleInterested() {}
+  function handleToggleInterested() {
+    setIsInterested((prev) => !prev);
+  }
 
-  // TODO 4: Create ticketsStatusText (string):
-  // 0 → "SOLD OUT"
-  // 1–30 → "Last tickets – hurry up!"
-  // >30 → "Tickets available"
+  
+  let ticketsStatusText = "";
+  if (props.ticketsLeft === 0) {
+    ticketsStatusText = "SOLD OUT";
+  } else if (props.ticketsLeft <= 30) {
+    ticketsStatusText = "Last tickets – hurry up!";
+  } else {
+    ticketsStatusText = "Tickets available";
+  }
 
-  // TODO 5: Create text for interest status based on isInterested:
-  // false → "You haven't added this show yet"
-  // true → "This show is in your interested list 🎟️"
+  let interestedText = "";
+  if (isInterested) {
+    interestedText = "This show is in your interested list 🎟️";
+  } else {
+    interestedText = "You haven't added this show yet";
+  }
 
   return (
     <article className="show-card">
       <div className="show-image-wrapper">
-        {/* TODO 6: Replace placeholder with real <img> from props */}
-        {/* <img src={image} alt={artist} className="show-image" /> */}
-        <div className="show-image-placeholder">Image goes here</div>
+        <img src={props.image} alt={props.artist} className="show-image" />
       </div>
 
       <header className="show-header">
         <h2 className="show-artist">
-          {/* TODO 7: If isInterested → show ⭐ before artist name */}
-          "Artist name here"
+          {isInterested && <span className="interested-star">⭐</span>}
+          {props.artist}
         </h2>
         <p className="show-meta">
-          {/* TODO 8: Display stage, day, hour from props */}
-          "Stage · Day · Hour"
+          {props.stage} · {props.day} · {props.hour}
         </p>
       </header>
 
       <section className="show-info">
         <p className="tickets-status">
-          {/* TODO 9: Display the ticketsStatusText */}
-          "Tickets status text"
+          {ticketsStatusText}
         </p>
 
         <p className="interested-status">
-          {/* TODO 10: Display the interestedText */}
-          "Interested status text"
+          {interestedText}
         </p>
       </section>
 
       <button
         className="interested-button"
-        // TODO 11: Connect onClick to handleToggleInterested function
+        onClick={handleToggleInterested}
       >
-        {/* TODO 12: Button text:
-            false → "Mark as interested"
-            true  → "Remove from my list"
-        */}
-        "Button text"
+        {isInterested ? "Remove from my list" : "Mark as interested"}
       </button>
     </article>
   );
